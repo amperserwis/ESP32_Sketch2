@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="vue">
+      <center>
+            <h1>ESP32 Digital output Boton y PWM input sensor Temperatura y Humedad</h1>
+                <h3> Placa 1 </h3>
+                    <button @click= "botonOn1" >On</button>
+                    <button @click= "botonOff1" >Off</button>
+                    <br>
+                <h3>Placa 2</h3>
+                    <button @click= "botonOn2" >On</button>
+                    <button @click= "botonOff2" >Off</button>        
+        </center>      
+    </div>
+    <script>
+        const app = {
+    data() {
+      return {
+        board: 0,
+        pin: 0,
+        pin_status: 0,
+        connection : new WebSocket('ws://'+location.hostname+':81/')
+      }
+    },
+    
+    methods: {     
+      botonOn1(){
+        this.board = 1; 
+        this.pin= 2;
+        this.pin_status= 1;
+        console.log("Led 1 is ON")
+        this.enviarDato()
+      },
+
+      botonOff1(){
+        this.board = 1; 
+        this.pin = 2;
+        this.pin_status = 0;
+        console.log("Led 1 is OFF")
+        this.enviarDato()
+      },
+      botonOn2(){
+        this.board = 2; 
+        this.pin = 2;
+        this.pin_status = 1;
+        console.log("Led 2 is ON")
+        this.enviarDato()
+      },
+
+      botonOff2(){
+        this.board = 2; 
+        this.pin = 2;
+        this.pin_status = 0;
+        console.log("Led 2 is OFF")
+        this.enviarDato()
+      },
+      
+      enviarDato(){
+        var datoBoton = {
+          "board" : this.board ,
+          "pin" : this.pin,
+          "pin_status" : this.pin_status };
+        this.connection.send(JSON.stringify(datoBoton))
+      },
+    },
+}
+
+Vue.createApp(app).mount('#vue')
+    </script>  
+</body>
+</html>
